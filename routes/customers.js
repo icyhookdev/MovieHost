@@ -1,6 +1,5 @@
 const express = require('express');
-// const mongoose = require('mongoose');
-const { Customer, validate} = require('../models/customer');
+const { Customer, validate } = require('../models/customer');
 const router = express.Router();
 
 
@@ -19,10 +18,10 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  // const { error } = validate(req.body);
+  const { error } = validate(req.body);
 
-  // if(error)
-  //   return res.status(400).send(error.details[0].message);
+  if(error)
+    return res.status(400).send(error.details[0].message);
 
   let customer = new Customer({
     name: req.body.name,
@@ -64,7 +63,6 @@ router.delete('/:id', async (req, res) => {
 
   res.send(customer);
 });
-
 
 
 module.exports = router;
