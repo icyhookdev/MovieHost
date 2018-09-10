@@ -1,2 +1,4 @@
 # MovieHost
-Resquest Movie's info from the different genres
+Movie Host
+
+Using Node.js & express.js
