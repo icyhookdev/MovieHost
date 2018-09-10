@@ -1,6 +1,5 @@
 const express = require('express');
-const Genre = require('../models/genre');
-const validate = require('../helpers/validate');
+const { Genre, validate } = require('../models/genre');
 const router = express.Router();
 
 
