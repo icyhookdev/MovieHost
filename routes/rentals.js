@@ -1,8 +1,12 @@
 const { Rental, validate } = require('../models/rental');
 const { Movie } = require('../models/movie');
 const { Customer } = require('../models/customer');
-const express = require('mongoose');
+const mongoose = require('mongoose');
+const Fawn = require('fawn'); // its require to make a transaction
+const express = require('express');
 const router = express.Router();
+
+Fawn.init(mongoose);
 
 router.get('/', async (req, res) => {
   const rentals = await Rental.find().sort('-dateOut');
@@ -38,10 +42,19 @@ router.post('/', async (req, res) => {
     }
   });
 
-  rental = await rental.save();
+  try {
+    new Fawn.Task()
+      .save('rentals', rental)
+      .update('movies', { _id: movie._id}, {
+        $inc: {
+          numberInStock: -1
+        }
+      })
+      .run();
+  } catch (ex) {
+    res.status(500).send('something failed.');
+  }
 
-  movie.numberInStock--;
-  movie.save();
 
   res.send(rental);
 });
